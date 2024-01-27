@@ -41,3 +41,7 @@ fcomplrepcom <- function(jointDistribution) {
   
   return(jointDistribution)
 }
+
+result <- frepcomgen(7, 10)
+
+result <- fcomplrepcom(result)
