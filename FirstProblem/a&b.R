@@ -37,15 +37,7 @@ fcomplrepcom <- function(jointDistribution) {
   jointDistribution[1:(numbRows - 1), 1:(numbCols - 1)] <- associatedProbabilities
   #print(jointDistribution)
   
+  jointDistribution[nrow(jointDistribution), ncol(jointDistribution)] <- 1
+  
   return(jointDistribution)
 }
-
-n <- 7
-m <- 10
-
-result <- frepcomgen(n, m)
-print(result)
-
-result <- fcomplrepcom(result)
-print(result)
-print(sum(result[1:n, 1:m]))
