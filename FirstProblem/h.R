@@ -1,3 +1,11 @@
+#Functia fverind verifica daca variabilele sunt independente, adica daca produsul
+#probabilitatilor marginale de la o anumita pozitie [i, j]
+#este egal cu probabilitatea din repartitia comuna de la pozitia [i, j]
+#
+#Functia fvernecor verifica daca variabilele sunt necorelate, adica daca covarianta variabilelor X si Y
+#este egala cu 0
+
+
 fverind <- function(jointDistribution) {
   numbRows <- nrow(jointDistribution)
   numbCols <- ncol(jointDistribution)

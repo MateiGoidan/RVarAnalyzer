@@ -1,7 +1,7 @@
 # Functia frepcomgen creaza tabelul repartitiei comune a v. a. X si Y, cu n + 1 linii unde n
-# reprezinta numarul probabiliatilor lui X si m + 1 linii unde m reprezinta numarul 
+# reprezinta numarul probabilitatilor lui X si m + 1 linii unde m reprezinta numarul 
 # probabilitatilor lui Y, fara probabilitati asociative. Pe coloana m + 1 se afla valorile
-# probabilitatilorlui X si pe linia n + 1 se afla valorile probabilitatilor lui Y. m si n pot
+# probabilitatilor lui X si pe linia n + 1 se afla valorile probabilitatilor lui Y. m si n pot
 # lua valori mai mici de 10^5.
 # 
 # Functia fcomplrepcom completeaza tabelul generat de frepcomgen cu probabilitatile asociative

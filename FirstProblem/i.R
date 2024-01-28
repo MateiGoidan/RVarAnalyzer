@@ -1,3 +1,11 @@
+#Programul creaza o vizualizare 3D a variabilei tridimensionale (X, Y, Z) si obtine repartitiile marginale
+#Libraria plotly ne ajuta la crearea modelului, iar libraria dplyr a fost folosita pentru a
+#modifica setul de date
+#
+#Pe axa x este valoarea variabilei X, pe axa y este valoarea variabilei Y, iar pe axa z este valoarea
+#variabilei Z. Probabilitatea este un punct in interiorul modelului, si difera ca dimensiune
+#in functie de cat de mare este probabilitatea comuna.
+
 if (!require('plotly')) install.packages('plotly')
 if (!require('dplyr')) install.packages('dplyr')
 
