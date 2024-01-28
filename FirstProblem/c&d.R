@@ -13,6 +13,9 @@ frepmarginal <- function(jointDistribution) {
   # Ştergem ultima linie şi coloană ca să putem calcula mai eficient
   jointDistribution <- jointDistribution[-nrow(jointDistribution), -ncol(jointDistribution)]
   
+  # Ştergem şi prima linie şi coloană ca să putem calcula mai eficient
+  jointDistribution <- jointDistribution[-1, -1]
+  
   # Repartiţiile marginale ale lui X şi Y sunt sumele de pe linii respectiv coloane
   X <- apply(jointDistribution, 1, sum)
   Y <- apply(jointDistribution, 2, sum)
@@ -67,6 +70,10 @@ if(length(a) > length(b)) {
 #print(c)
 
 c <- fpropcov(a, a, 0, 4, 4, 0)
+
+#print(c)
+
+c <- fpropcov(1, 2, 0, 4, 4, 0)
 
 #print(c)
 

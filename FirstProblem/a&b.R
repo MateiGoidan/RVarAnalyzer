@@ -114,7 +114,7 @@ fcomplrepcom <- function(jointDistribution) {
   while (numbNA != 0) {
     copynumbNA <- numbNA
     
-    print(numbNA)
+    #print(numbNA)
     
     for (i in 2:numbRows) {
       if(length(which(is.na(jointDistribution[i, 2:numbCols]))) == 1) {
@@ -186,10 +186,10 @@ n <- 10
 m <- 4
 
 result <- frepcomgen(n, m)
-print(result)
+#print(result)
 
 result <- fcomplrepcom(result)
-print(result)
+#print(result)
 
 sum(result[2:(n + 1), 2:(m + 1)])
 sum(result[2:(n + 1), m + 2])
