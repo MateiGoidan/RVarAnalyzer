@@ -1,5 +1,5 @@
 # Probability-and-Statistics-project
-Exercitiul 1) Partea I  
+Exercitiul 2) Partea II  
 Matei: b) j)  
 Bogdan: a) c) d)  
 Tibi : f) h)  
