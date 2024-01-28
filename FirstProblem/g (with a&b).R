@@ -161,60 +161,64 @@ fcomplrepcom <- function(jointDistribution) {
 }
 
 n <- 10
-m <- 4
+m <- 8
 
 result <- frepcomgen(n, m)
 
 jointDistribution <- fcomplrepcom(result)
 
-#1
+# 1. Calculul Covarianței:
+
+# Extrage valorile variabilelor X și Y din matricea jointDistribution
+# Extrage probabilitățile asociate pentru X și Y
+# Calcularea E(X), E(Y), E(XY)
+# Calcularea Cov(5X + 9, -3Y - 2)
+# Afișarea rezultatului
+
 X_values <- jointDistribution[2:(n + 1), 1]
 Y_values <- jointDistribution[1, 2:(m + 1)]
 
-# Extrage probabilitățile asociate pentru X și Y
 prob_X <- jointDistribution[2:(n + 1), m + 2]
 prob_Y <- jointDistribution[n + 2, 2:(m + 1)]
 
-# Calcularea E(X), E(Y), E(XY)
 E_X <- sum(X_values * prob_X)
 E_Y <- sum(Y_values * prob_Y)
 E_XY <- sum(outer(X_values, Y_values, "*") * jointDistribution[2:(n + 1), 2:(m + 1)])
 
-# Calcularea Cov(5X + 9, -3Y - 2)
 Cov_5X_9_minus_3Y_2 <- E_XY - (5 * E_X + 9) * (-3 * E_Y - 2)
 
-# Afișarea rezultatului
 print(Cov_5X_9_minus_3Y_2)
 
-#2
-# Extrage valorile variabilei X și Y din matricea jointDistribution
+# 2. Calculul Probabilității Condiționate:
+
+# Extrage valorile variabilelor X și Y din matricea jointDistribution
+# Extrage probabilitățile asociate pentru X și Y
+# Calcularea probabilității condiționate P(0 < X < 0.8 | Y > 0.3)
+# Calcularea probabilității P(Y > 0.3)
+# Calcularea probabilității condiționate P(0 < X < 0.8 | Y > 0.3)
+# Afișarea rezultatului
 X_values <- jointDistribution[2:(n + 1), 1]
 Y_values <- jointDistribution[1, 2:(m + 1)]
 
-# Extrage probabilitățile asociate pentru X și Y
 prob_X <- jointDistribution[2:(n + 1), m + 2]
 prob_Y <- jointDistribution[n + 2, 2:(m + 1)]
 
-# Calcularea probabilității condiționate P(0 < X < 0.8 | Y > 0.3)
 prob_X_given_Y <- jointDistribution[2:(n + 1), 2:(m + 1)] / prob_Y  # Probabilitatea P(X, Y)
 prob_X_given_Y_Y_gt_0.3 <- prob_X_given_Y[X_values > 0 & X_values < 0.8, Y_values > 0.3]  # Subsetul de valori dorite
 
-# Calcularea probabilității P(Y > 0.3)
 prob_Y_gt_0.3 <- sum(prob_Y[Y_values > 0.3])
 
-# Calcularea probabilității condiționate P(0 < X < 0.8 | Y > 0.3)
 prob_conditional <- sum(prob_X_given_Y_Y_gt_0.3) / prob_Y_gt_0.3
 
-# Afișarea rezultatului
 print(prob_conditional)
 
-#3
+# 3. Calculul Probabilității Comune:
+
 # Calcularea probabilității P(X > 0.2 și Y < 1.7)
+# Afișarea rezultatului
 prob_X_and_Y <- jointDistribution[2:(n + 1), 2:(m + 1)]
 prob_X_gt_0.2_and_Y_lt_1.7 <- prob_X_and_Y[X_values > 0.2 & Y_values < 1.7]
 
-# Calcularea probabilității P(X > 0.2 și Y < 1.7)
 prob_desired <- sum(prob_X_gt_0.2_and_Y_lt_1.7)
 
-# Afișarea rezultatului
 print(prob_desired)
