@@ -15,8 +15,8 @@ fverind <- function(jointDistribution) {
   
   productProbabilities <- outer(X_marginal, Y_marginal)
   
-  for (i in 1:(numbRows - 1)) {
-    for (j in 1:(numbCols - 1)) {
+  for (i in 2:(numbRows - 1)) {
+    for (j in 2:(numbCols - 1)) {
       if (abs(jointDistribution[i, j] - productProbabilities[i, j]) != 0) {
         return(FALSE)
       }
@@ -37,8 +37,8 @@ fvernecor <- function(jointDistribution) {
   EY <- sum(Y_marginal * (1:(numbRows - 1)))
   
   covariance <- 0
-  for (i in 1:(numbRows - 1)) {
-    for (j in 1:(numbCols - 1)) {
+  for (i in 2:(numbRows - 1)) {
+    for (j in 2:(numbCols - 1)) {
       covariance <- covariance + (i - EX) * (j - EY) * jointDistribution[i, j]
     }
   }
