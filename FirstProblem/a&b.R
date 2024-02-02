@@ -113,8 +113,7 @@ fcomplrepcom <- function(jointDistribution) {
   
   while (numbNA != 0) {
     copynumbNA <- numbNA
-    
-    #print(numbNA)
+    isFound <- FALSE
     
     for (i in 2:numbRows) {
       if(length(which(is.na(jointDistribution[i, 2:numbCols]))) == 1) {
@@ -124,25 +123,31 @@ fcomplrepcom <- function(jointDistribution) {
           sumRow <- sum(jointDistribution[i,2:(position - 1)])
           jointDistribution[i, position] <- sumRow
           numbNA <- numbNA - 1
+          isFound <- TRUE
           break;
         } else if(position == 2) {
           sumRow <- sum(jointDistribution[i, 3:(numbCols - 1)])
           jointDistribution[i, position] <- jointDistribution[i,numbCols] - sumRow
           numbNA <- numbNA - 1
+          isFound <- TRUE
           break;
         } else if(position == numbCols - 1) {
           sumRow <- sum(jointDistribution[i, 2:(position - 1)])
           jointDistribution[i, position] <- jointDistribution[i,numbCols] - sumRow
           numbNA <- numbNA - 1
+          isFound <- TRUE
           break;
         } else {
           sumRow <- sum(jointDistribution[i, 2:(position - 1)]) + sum(jointDistribution[i, (position + 1):(numbCols - 1)])
           jointDistribution[i, position] <- jointDistribution[i,numbCols] - sumRow
           numbNA <- numbNA - 1
+          isFound <- TRUE
           break;
         }
       }
     }
+    
+    if(isFound == TRUE) { next; }
     
     for (j in 2:numbCols) {
       if(length(which(is.na(jointDistribution[2:numbRows, j]))) == 1) {
@@ -182,14 +187,14 @@ fcomplrepcom <- function(jointDistribution) {
   return(jointDistribution)
 }
 
-n <- 10
-m <- 4
+n <- 12
+m <- 6
 
 result <- frepcomgen(n, m)
-#print(result)
+print(result)
 
 result <- fcomplrepcom(result)
-#print(result)
+print(result)
 
 sum(result[2:(n + 1), 2:(m + 1)])
 sum(result[2:(n + 1), m + 2])
