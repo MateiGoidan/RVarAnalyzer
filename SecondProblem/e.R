@@ -1,31 +1,80 @@
-#Programul defineste o densitate comuna, si afla densitatile marginale si conditionate ale variabilelor
-#Densitatea comuna a fost definita pentru o distributie normala bivariata
+#Programul foloseste densitatea comuna definita de utilizator si afla densitatile marginale si
+#conditionate ale variabilelor
 #
-#Folosim pachetul mvtnorm pentru a crea un esantion de date din distributia normala bivariata
+#Mai intai trebuie verificat daca functia este pozitiva pe toate valorile domeniului deoarece densitatile
+#marginale trebuie sa fie pozitive
+#Daca este indeplinita conditia anterioara, trebuie verificata daca integrala are valoarea 1
 #
-#Pentru densitatile marginale, integram de la -inf la inf peste valorile din distributia normala bivariata
-#
+#Daca ambele conditii sunt indeplinite, atunci calculam densitatile marginale si conditionate
+#Pentru densitatile marginale, pentru X fixam o valoare X=x si integram f(x, y), unde y variaza
+#                          iar pentru Y fixam o valoare Y=y si integram f(x, y) unde x variaza
 #Pentru densitatile coditionate, facem raportul dintre densitatea comuna si repartitia marginala
 #a variabilei X respectiv Y, afland astfel probabilitatea lui X (sau Y) atunci cand Y (sau X) este cunoscut
 
-if (!requireNamespace("mvtnorm", quietly = TRUE)) install.packages("mvtnorm")
-library(mvtnorm)
+if (!requireNamespace("pracma", quietly = TRUE)) install.packages("pracma")
+library(pracma)
 
-f <- function(x, y) {
-  mu <- c(0, 0)
-  Sigma <- matrix(c(1, 0.5, 0.5, 1), 2, 2)
-  mvtnorm::dmvnorm(cbind(x, y), mean = mu, sigma = Sigma)
+checkValuesPositive <- function(f, xy, zw, i) {
+  check <- TRUE
+  for(x in seq(xy[1], xy[2], i))
+  {
+    for(y in seq(zw[1], zw[2], i))
+    {
+      if(f(x, y) < 0)
+        check <- FALSE
+      break
+    } 
+    if(check == FALSE)
+      break
+  }
+  return(check)
 }
 
-f_X <- function(x) integrate(function(y) f(x, y), -Inf, Inf)$value
-f_Y <- function(y) integrate(function(x) f(x, y), -Inf, Inf)$value
+checkValueOfIntegral <- function(f, xy, zw) {
+  tolerance <- 1e-6
+  valueOfIntegral <- integral2(f, xy[1], xy[2], zw[1], zw[2])$Q
+  return(abs(valueOfIntegral - 1) < tolerance)
+}
 
-f_X_given_Y <- function(x, y) f(x, y) / f_Y(y)
-f_Y_given_X <- function(y, x) f(x, y) / f_X(x)
+fMarginalX <- function(f, x, lowerLimit, higherLimit) integrate(function(y) f(x, y), lowerLimit, higherLimit)$value
+fMarginalY <- function(f, y, lowerLimit, higherLimit) integrate(function(x) f(x, y), lowerLimit, higherLimit)$value
 
-x_val <- 0
-y_val <- 0
-cat("Densitatea marginală f_X la x =", x_val, "este", f_X(x_val), "\n")
-cat("Densitatea marginală f_Y la y =", y_val, "este", f_Y(y_val), "\n")
-cat("Densitatea condiționată f_X_given_Y la x =", x_val, "și y =", y_val, "este", f_X_given_Y(x_val, y_val), "\n")
-cat("Densitatea condiționată f_Y_given_X la y =", y_val, "și x =", x_val, "este", f_Y_given_X(y_val, x_val), "\n")
+fXGivenY <- function(f, x, y, lowerLimit, higherLimit) f(x, y) / fMarginalY(f, y, lowerLimit, higherLimit)
+fYGivenX <- function(f, y, x, lowerLimit, higherLimit) f(x, y) / fMarginalX(f, x, lowerLimit, higherLimit)
+
+findMarginalAndConditionalDensities <- function(f, x, y, xy, zw){
+  if(!checkValuesPositive(f, xy, zw, 0.01)) {
+    print("Eroare! Pe domeniu, functia are valori negative.")
+    return()
+  }
+  if(!checkValueOfIntegral(f, xy, zw)) {
+    print("Eroare! Probabilitatea nu este egala cu 1")
+    return()
+  }
+  
+  #Densitate marginala variabila continua X
+  print(paste("Densitate marginala X:", fMarginalX(f, x, zw[1], zw[2])))
+  
+  #Densitate marginala variabila continua Y
+  print(paste("Densitate marginala Y:", fMarginalY(f, x, xy[1], xy[2])))
+  
+  #Densitate conditionata de Y
+  print(paste("Densitate conditionata de Y = ", y, ": ", fXGivenY(f, x, y, zw[1], zw[2]), sep=""))
+  
+  #Densitate conditionata de X
+  print(paste("Densitate conditionata de X = ", x, ": ", fXGivenY(f, y, x, xy[1], xy[2]), sep=""))
+}
+
+#Exemplu
+#test1 <- function() {
+#  f <- function(x, y) (8 / 3) * x ^ 3 * y
+#  findMarginalAndConditionalDensities(f, 0.5, 1.5, c(0, 1), c(1, 2))
+#}
+#
+#test2 <- function() {
+#  f<- function(x, y) (3/ 2) * (x ^2 + y ^ 2)
+#  findMarginalAndConditionalDensities(f, 0, 0.5, c(0, 1), c(0, 1))
+#}
+#
+#test1()
+#test2()

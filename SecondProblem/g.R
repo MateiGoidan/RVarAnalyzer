@@ -1,45 +1,129 @@
-#Programul calculeaza pentru variabilele unidimensionale momentele initiale si momentele centrate
-#pornind de la densitatea comuna a distributiei normale bivariate
+#Functiile calculeaza media, dispersia, momentele initiale si momentele centrate de ordin 4 pentru variabilele
+#unidimensionale si cea bidimensionala
 #
-#Pentru momentele initiale se calculeaza E[X^k] si E[Y^k]
-#Pentru momentele centrate se calculeaza E[(X - E[X])^k] si E[(Y - E[Y])^k]
+#In cod, sunt declarate 3 functii pentru variabilele aleatoare:
+#f - functia pentru variabila unidimensionala X
+#g - functia pentru variabila unidimensionala Y
+#f_xy - functia de densitate comuna pentru variabila bidimensionala (X=x, Y=y)
 #
-#Media variabilei bidimensionale este calculata folosind functia colMeans (Functie pentru a calcula media
-#pe coloane)
+#Pentru a calcula media si momentul initial pentru variabilele unidimensionale avem functia meanAndInitialMoment1
+#Pentru a calcula dispersia si momentul centrat pentru variabilele unidimensionale avem functia varianceAndCentralMoment1
 #
-#Dispersia variabilei bidimensionale este calculata folosind functia var (Functie pentru a calcula varianta)
+#Pentru a calcula media si momentul initial pentru variabila bidimensionala avem functile:
+#Pentru variabila X: meanAndInitialMoment21
+#Pentru variabila Y: meanAndInitialMoment22
+#Pentru a calcula dispersia si momentul centrat pentru variabila bidimensionala avem functile:
+#Pentru variabila X: varianceAndCentralMoment23
+#Pentru variabila Y: varianceAndCentralMoment24
+#
+#Functiile descrise anterior calculeaza integralele simple si duble asociate mediei, dispersiei, momentelor initiale si centrate
 
-if (!requireNamespace("mvtnorm", quietly = TRUE)) install.packages("mvtnorm")
-library(mvtnorm)
 
-mu <- c(0, 0) 
-Sigma <- matrix(c(1, 0.5, 0.5, 1), 2, 2)
-
-set.seed(1)
-sample_size <- 10000
-sample <- mvtnorm::rmvnorm(n = sample_size, mean = mu, sigma = Sigma)
-
-calculate_moments <- function(distribution, order) {
-  moments_initial <- numeric(order)
-  moments_centered <- numeric(order)
-  for (i in 1:order) {
-    
-    moments_initial[i] <- mean(distribution^i)
-    
-    moments_centered[i] <- mean((distribution - mean(distribution))^i)
-  }
-  return(list(initial = moments_initial, centered = moments_centered))
+#Unidimensionale
+meanAndInitialMoment1 <- function(fun, poww, interval = c(-Inf, Inf)){
+  integrate(function(x){ x ^ poww * f(x) }, interval[1], interval[2])$value
 }
 
-moments_X <- calculate_moments(sample[, 1], 4)
-moments_Y <- calculate_moments(sample[, 2], 4)
+#Unidimensionale
+varianceAndCentralMoment1 <- function(fun, poww, meanOf, interval = c(-Inf, Inf)){
+  integrate(function(x){ (x - meanOf) ^ poww * f(x) }, interval[1], interval[2])$value
+}
 
-cat("Momentele pentru X: Inițiale -", moments_X$initial, "Centrate -", moments_X$centered, "\n")
-cat("Momentele pentru Y: Inițiale -", moments_Y$initial, "Centrate -", moments_Y$centered, "\n")
+#Bidimensionale
+meanAndInitialMoment21 <- function(f, poww, intervalx, intervaly) {
+  integrate(
+    Vectorize(function(x) {
+      integrate(function(y) x ^ poww * f(x, y), intervaly[1], intervaly[2])$value
+    }), intervalx[1], intervalx[2]
+  )$value
+}
 
-mean_bidimensional <- colMeans(sample)
-dispersia_bidimensional <- var(sample)
+#Bidimensionale
+meanAndInitialMoment22 <- function(f, poww, intervalx, intervaly) {
+  integrate(
+    Vectorize(function(y) {
+      integrate(function(x) y ^ poww * f(x, y), intervalx[1], intervalx[2])$value
+    }), intervaly[1], intervaly[2]
+  )$value
+}
 
-cat("Media bidimensionala: ", mean_bidimensional, "\n")
-cat("Dispersia bidimensionala: \n")
-print(dispersia_bidimensional)
+#Bidimensionale
+varianceAndCentralMoment23 <- function(f, poww, meanOfX, intervalx, intervaly) {
+  integrate(
+    Vectorize(function(x) {
+      integrate(function(y) (x - meanOfX) ^ poww * f(x, y), intervaly[1], intervaly[2])$value
+    }), intervalx[1], intervalx[2]
+  )$value
+}
+
+#Bidimensionale
+varianceAndCentralMoment24 <- function(f, poww, meanOfY, intervalx, intervaly) {
+  integrate(
+    Vectorize(function(y) {
+      integrate(function(x) (y - meanOfY) ^ poww * f(x, y), intervalx[1], intervalx[2])$value
+    }), intervaly[1], intervaly[2]
+  )$value
+}
+
+
+initialMomentAndCentralMomentForUnidimensional <- function(f, g, poww){
+  meanOfX <- meanAndInitialMoment1(f, 1)
+  initialMomentX <- meanAndInitialMoment1(f, poww)
+  dispersionOfX <- varianceAndCentralMoment1(f, 2, meanOfX)
+  centralMomentX <- varianceAndCentralMoment1(f, poww, meanOfX)
+  
+  meanOfY <- meanAndInitialMoment1(g, 1)
+  initialMomentY <- meanAndInitialMoment1(g, poww)
+  dispersionOfY <- varianceAndCentralMoment1(g, 2, meanOfY)
+  centralMomentY <- varianceAndCentralMoment1(g, poww, meanOfY)
+  
+  print("Values of X UNIDIMENSIONAL")
+  print(paste("Mean of X", meanOfX))
+  print(paste("Initial moment X", initialMomentX))
+  print(paste("Dispersion of X", dispersionOfX))
+  print(paste("Central moment of X", centralMomentX))
+  
+  print("Values of Y UNIDIMENSIONAL")
+  print(paste("Mean of Y", meanOfY))
+  print(paste("Initial moment Y", initialMomentY))
+  print(paste("Dispersion of Y", dispersionOfY))
+  print(paste("Central moment of Y", centralMomentY))
+}
+
+initialMomentAndCentralMomentForBidimensional <- function(f, poww)
+{
+  meanOfX <- meanAndInitialMoment21(f, 1, c(-Inf, Inf), c(-Inf, Inf))
+  initialMomentX <- meanAndInitialMoment21(f, poww, c(-Inf, Inf), c(-Inf, Inf))
+  dispersionOfX <- varianceAndCentralMoment23(f, 2, meanOfX, c(-Inf, Inf), c(-Inf, Inf))
+  centralMomentX <- varianceAndCentralMoment23(f, poww, meanOfX, c(-Inf, Inf), c(-Inf, Inf))
+  
+  meanOfY <- meanAndInitialMoment22(f, 1, c(-Inf, Inf), c(-Inf, Inf))
+  initialMomentY <- meanAndInitialMoment22(f, poww, c(-Inf, Inf), c(-Inf, Inf))
+  dispersionOfY <- varianceAndCentralMoment24(f, 2, meanOfY, c(-Inf, Inf), c(-Inf, Inf))
+  centralMomentY <- varianceAndCentralMoment24(f, poww, meanOfY, c(-Inf, Inf), c(-Inf, Inf))
+  
+  print("Values of X BIDIMENSIONAL")
+  print(paste("Mean of X", meanOfX))
+  print(paste("Initial moment X", initialMomentX))
+  print(paste("Dispersion of X", dispersionOfX))
+  print(paste("Central moment of X", centralMomentX))
+  
+  print("Values of Y BIDIMENSIONAL")
+  print(paste("Mean of Y", meanOfY))
+  print(paste("Initial moment Y", initialMomentY))
+  print(paste("Dispersion of Y", dispersionOfY))
+  print(paste("Central moment of Y", centralMomentY))
+}
+
+#Exemplu
+#
+#f <- function(x) { exp(-x^2) }
+#
+#g <- function(x) { 2*x + 3 }
+#
+#f_xy <- function(x, y) {
+#  1 / (2 * pi) * exp(-0.5 * (x^2 + y^2))
+#}
+#
+#initialMomentAndCentralMomentForUnidimensional(f, g, 4)
+#initialMomentAndCentralMomentForBidimensional(f_xy, 4)
