@@ -121,9 +121,9 @@ initialMomentAndCentralMomentForBidimensional <- function(f, poww)
 #
 #g <- function(x) { 2*x + 3 }
 #
-#f_xy <- function(x, y) {
-#  1 / (2 * pi) * exp(-0.5 * (x^2 + y^2))
-#}
+f_xy <- function(x, y) {
+  (3 * x^2 + 3 * y^2) / 2
+}
 #
 #initialMomentAndCentralMomentForUnidimensional(f, g, 4)
-#initialMomentAndCentralMomentForBidimensional(f_xy, 4)
+initialMomentAndCentralMomentForBidimensional(f_xy, 4)

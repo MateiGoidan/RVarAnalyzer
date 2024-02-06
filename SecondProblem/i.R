@@ -1,20 +1,18 @@
 ####
 # Cerinta: Crearea unei funcții P care permite calculul diferitelor tipuri de
-# probabilități asociate unei variabile aleatoare continue(similar funcției P din pachetul discreteRV)
+# probabilități asociate unei variabile aleatoare continue
 #
-# Header functie: myP(f, p)
+# Functie: myP(f, p)
 #    - unde f este o functie densitate de probabilitate (pdf)
 #    - iar p este un string ce reprezinta probabilitatea (conditionata sau independenta).
 #
 # Obligatoriu, var se va afla in stanga operatorului
 
-####
-
 
 myP <- function(f, p) {
   possibleOperations = c("<=",">=","=","<",">")
   
-  # transforma string-ul dat in ceva ce pot utiliza
+  #Separa stringul dat pentru a-l putea utiliza
   parseExpression <- function(expression) {
     expression <- gsub(" ", "", expression)
     for(operation in possibleOperations) {
@@ -28,10 +26,12 @@ myP <- function(f, p) {
     return(c(-1))
   }
   
+  #Calculam cdf P(X <= bound)
   cdf <- function(bound) { 
     return(integrate(f, -Inf, bound)$value)
   }
   
+  #Transformam din string in double
   computeBound <- function(bound) {
     resolve <- switch(bound,
                       "-Inf" = -Inf,
@@ -40,10 +40,12 @@ myP <- function(f, p) {
     return (resolve)
   }
   
+  #Calculul probabilitatii
   evaluate <- function(operator, bound) {
     bound = computeBound(bound)
     integral <- cdf(bound)
     
+    #Pentru > si >= scadem cdf-ul si ramane restul
     answer <- switch(
       operator,
       "=" = 0,
@@ -76,25 +78,32 @@ myP <- function(f, p) {
     bound1 <- parameter1[3]
     bound2 <- parameter2[3]
     
+    #Calculam P(A | B)
     answer1 <- evaluate(operation1, bound1)
     answer2 <- evaluate(operation2, bound2)
     
+    #Daca una din ele este 0, atunci intersectia da 0
     if(answer1 == 0)
       return(0);
     if(answer2 == 0)
       return ("Cannot divide by zero")
     
+    
+    #Cazul 1: Probabilitate imposibila P(x <= 1 | x >= 10) = 0
     if (operation1 %in% c("<=","<") && operation2 %in% c(">=", ">") && bound1 >= bound2)
       return (0);
     
+    #Cazul 2: Probabilitate imposibila P(x > 10 | x < 2) = 0
     if (operation1 %in% c(">=",">") && operation2 %in% c("<=", "<") && bound1 >=bound2)
       return (0);
     
+    #Cazul 3: Acelasi tip de operator, iar intersectia este intervalul mai mic P(x > 5 | x > 10) -> (5, inf)
     if(operation1 %in% c(">=",">") && operation2 %in% c(">=",">"))
       if(bound1 > bound2)
         return(answer1 / answer2)
     else return (1);
     
+    #Cazul 4: Acelasi tip de operator, iar intersectia este intervalul mai mic P(x < 5 | x < 10) -> (-inf, 5)
     if(operation1 %in% c("<=","<") && operation2 %in% c("<=","<"))
       if(bound1 < bound2)
         return(answer1 / answer2)

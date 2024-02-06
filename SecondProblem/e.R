@@ -71,10 +71,10 @@ findMarginalAndConditionalDensities <- function(f, x, y, xy, zw){
 #  findMarginalAndConditionalDensities(f, 0.5, 1.5, c(0, 1), c(1, 2))
 #}
 #
-#test2 <- function() {
-#  f<- function(x, y) (3/ 2) * (x ^2 + y ^ 2)
-#  findMarginalAndConditionalDensities(f, 0, 0.5, c(0, 1), c(0, 1))
-#}
-#
+test2 <- function() {
+  f<- function(x, y) (3/ 2) * (x ^ 2 + y ^ 2)
+  findMarginalAndConditionalDensities(f, 0, 0.5, c(0, 1), c(0, 1))
+}
+
 #test1()
-#test2()
+test2()

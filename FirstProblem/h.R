@@ -15,8 +15,9 @@ fverind <- function(jointDistribution) {
   
   productProbabilities <- outer(X_marginal, Y_marginal)
   
-  for (i in 2:(numbRows - 1)) {
-    for (j in 2:(numbCols - 1)) {
+  for (i in 1:(numbRows - 1)) {
+    for (j in 1:(numbCols - 1)) {
+      
       if (abs(jointDistribution[i, j] - productProbabilities[i, j]) != 0) {
         return(FALSE)
       }
@@ -37,11 +38,24 @@ fvernecor <- function(jointDistribution) {
   EY <- sum(Y_marginal * (1:(numbRows - 1)))
   
   covariance <- 0
-  for (i in 2:(numbRows - 1)) {
-    for (j in 2:(numbCols - 1)) {
+  for (i in 1:(numbRows - 1)) {
+    for (j in 1:(numbCols - 1)) {
       covariance <- covariance + (i - EX) * (j - EY) * jointDistribution[i, j]
     }
   }
   
   return(abs(covariance) == 0)
 }
+
+jointDistributionCorrected <- matrix(c(0.1, 0.1, 0.2, 0.3, 0.5, 0.8, 0.4, 0.6, 1.0), nrow = 3, byrow = TRUE)
+colnames(jointDistributionCorrected) <- c("1", "2", "PM(X)")
+rownames(jointDistributionCorrected) <- c("1", "2", "PM(Y)")
+
+# Verificarea independenței
+isIndependent <- fverind(jointDistributionCorrected)
+print(isIndependent)
+
+# Verificarea necorelației
+isUncorrelated <- fvernecor(jointDistributionCorrected)
+print(isUncorrelated)
+
