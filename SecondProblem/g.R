@@ -90,17 +90,17 @@ initialMomentAndCentralMomentForUnidimensional <- function(f, g, poww){
   print(paste("Central moment of Y", centralMomentY))
 }
 
-initialMomentAndCentralMomentForBidimensional <- function(f, poww)
+initialMomentAndCentralMomentForBidimensional <- function(f, poww, intervalx, intervaly)
 {
-  meanOfX <- meanAndInitialMoment21(f, 1, c(-Inf, Inf), c(-Inf, Inf))
-  initialMomentX <- meanAndInitialMoment21(f, poww, c(-Inf, Inf), c(-Inf, Inf))
-  dispersionOfX <- varianceAndCentralMoment23(f, 2, meanOfX, c(-Inf, Inf), c(-Inf, Inf))
-  centralMomentX <- varianceAndCentralMoment23(f, poww, meanOfX, c(-Inf, Inf), c(-Inf, Inf))
+  meanOfX <- meanAndInitialMoment21(f, 1, intervalx, intervaly)
+  initialMomentX <- meanAndInitialMoment21(f, poww, intervalx, intervaly)
+  dispersionOfX <- varianceAndCentralMoment23(f, 2, meanOfX, intervalx, intervaly)
+  centralMomentX <- varianceAndCentralMoment23(f, poww, meanOfX, intervalx, intervaly)
   
-  meanOfY <- meanAndInitialMoment22(f, 1, c(-Inf, Inf), c(-Inf, Inf))
-  initialMomentY <- meanAndInitialMoment22(f, poww, c(-Inf, Inf), c(-Inf, Inf))
-  dispersionOfY <- varianceAndCentralMoment24(f, 2, meanOfY, c(-Inf, Inf), c(-Inf, Inf))
-  centralMomentY <- varianceAndCentralMoment24(f, poww, meanOfY, c(-Inf, Inf), c(-Inf, Inf))
+  meanOfY <- meanAndInitialMoment22(f, 1, intervalx, intervaly)
+  initialMomentY <- meanAndInitialMoment22(f, poww, intervalx, intervaly)
+  dispersionOfY <- varianceAndCentralMoment24(f, 2, meanOfY, intervalx, intervaly)
+  centralMomentY <- varianceAndCentralMoment24(f, poww, meanOfY, intervalx, intervaly)
   
   print("Values of X BIDIMENSIONAL")
   print(paste("Mean of X", meanOfX))
@@ -121,9 +121,9 @@ initialMomentAndCentralMomentForBidimensional <- function(f, poww)
 #
 #g <- function(x) { 2*x + 3 }
 #
-f_xy <- function(x, y) {
-  (3 * x^2 + 3 * y^2) / 2
-}
+#f_xy <- function(x, y) {
+#  (3 * x^2 + 3 * y^2) / 2
+#}
 #
 #initialMomentAndCentralMomentForUnidimensional(f, g, 4)
-initialMomentAndCentralMomentForBidimensional(f_xy, 4)
+#initialMomentAndCentralMomentForBidimensional(f_xy, 4, c(0,1), c(0,1))
