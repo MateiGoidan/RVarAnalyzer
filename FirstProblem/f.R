@@ -13,18 +13,27 @@
 # Funcția returnează o valoare numerică reprezentând frecvența condiționată calculată conform formulei:
 #   frecvența condiționată = (numărul de observații care îndeplinesc condițiile xVal și yVal) / (numărul total de observații în setul de date).
 
-# Exemplu de utilizare:
-# dataset <- data.frame(X = c(1, 2, 3, 4, 5), Y = c('A', 'B', 'A', 'B', 'A'))
-# rezultat <- fPcomun(dataset, 3, 'A')
-# print(rezultat)  # Output: 0.2 (20% din observații îndeplinesc condițiile x=3 și y='A')
 
 fPcomun <- function(dataset, xVal, yVal) {
+  # Numărul total de observații în setul de date
   nTotal <- length(dataset$X)
   
+  # Numărul de observații care îndeplinesc condiția X == xVal și Y == yVal
   nCondition <- sum(dataset$X == xVal & dataset$Y == yVal)
   
   return(nCondition / nTotal)
 }
-dataset <- data.frame(X = c(1, 2, 3, 4, 5), Y = c('A', 'B', 'A', 'B', 'A'))
-rezultat <- fPcomun(dataset, 3, 'A')
-print(rezultat)  
+
+# Generare de date de exemplu
+set.seed(123)  # Setarea unei semințe pentru reproducibilitate
+X <- sample(1:3, 100, replace = TRUE)  # Exemplu pentru variabila X
+Y <- sample(4:6, 100, replace = TRUE)  # Exemplu pentru variabila Y
+
+# Creare unui set de date
+dataset <- data.frame(X = X, Y = Y)
+
+# Calculul probabilității pentru perechea (2, 5)
+prob <- fPcomun(dataset, 2, 5)
+
+# Afișarea rezultatului
+cat("Probabilitatea pentru perechea (2, 5) este:", prob, "\n")

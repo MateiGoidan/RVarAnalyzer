@@ -185,7 +185,7 @@ E_X <- sum((5 * XValues + 9) * probX)
 E_Y <- sum((-3 * YValues - 2) * probY)
 E_XY <- sum(outer((5 * XValues + 9),(-3 * YValues - 2), "*") * jointDistribution[2:(n + 1), 2:(m + 1)])
 
-Cov_5X_9_minus_3Y_2 <- E_XY - E_X * E_Y)
+Cov_5X_9_minus_3Y_2 <- E_XY - E_X * E_Y
 
 print(Cov_5X_9_minus_3Y_2)
 
