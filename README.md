@@ -1,7 +1,2 @@
-# Probability-and-Statistics-project
-Exercitiul 2) Partea II  
-Matei: b) j)  
-Bogdan: a) c) d)  
-Tibi : f) h)  
-Rares: e) g) i)  
-Deadline: 5 Luni seara.  
+# RVarAnalyzer
+R - Shiny app that allows users to craft random variables from personalized probability density functions, construct marginal and conditional densities, and visually depict distribution nuances.
